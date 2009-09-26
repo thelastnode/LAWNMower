@@ -1,0 +1,17 @@
+=== LAWNMower
+
+== Compiling
+
+To compile LAWNMower, install libcurl and the Qt4 development libraries and then run:
+
+$ qmake
+$ make
+
+== Running
+
+To run, simply execute LAWNMower.
+
+== Developer Contact Info
+
+Ankit Shankar
+Email: ankitshankar (at) users (d0t) sourceforge (d0t) net
