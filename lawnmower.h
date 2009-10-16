@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QSystemTrayIcon>
+#include <QNetworkAccessManager>
 #include <QAction>
 
 #include "dialog.h"
@@ -25,12 +26,14 @@ public slots:
 	void logout();
 
 private slots:
-	void mow();
+	void mow(Mower::Status);
+	void replyReceived(QNetworkReply* reply);
 
 private:
 	static const int REFRESH = 3000;
 	static const int ERROR_REFRESH = 10000;
 	bool _isEnabled;
+	QNetworkAccessManager *_net;
 	QSystemTrayIcon *_tray;
 	QAction *_aToggle;
 	Dialog *_dialog;

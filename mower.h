@@ -3,22 +3,32 @@
 
 #include <string>
 
-class Mower
+#include <QObject>
+#include <QNetworkAccessManager>
+
+class Mower : public QObject
 {
+	Q_OBJECT
 public:
-    Mower(std::string username, std::string password);
+    Mower(QNetworkAccessManager* net, std::string username, std::string password);
 
-    enum Status {LoggedIn, LoggedOut, PendingLogIn, PendingLogOut, NotOnLAWN, Error};
+    enum Status { LoggedIn, LoggedOut, PendingLogIn, PendingLogOut, NotOnLAWN, Error };
+    enum State { LoggingIn, LoggingOut, GettingStatus, Idle };
 
-    Status getStatus();
-    bool login();
-    bool logout();
+    State getState();
+
+    static Status strToStatus(std::string s);
+
+public slots:
+    void getStatus();
+    void login();
+    void logout();
 
 private:
+    QNetworkAccessManager* _net;
 	std::string _username;
 	std::string _password;
-
-	static size_t write_function(void *ptr, size_t size, size_t nmemb, void *s);
+	State _state;
 };
 
 #endif // MOWER_H

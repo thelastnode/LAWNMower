@@ -1,9 +1,9 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-09-25T09:13:40
 # -------------------------------------------------
+QT += network
 TARGET = LAWNMower
 TEMPLATE = app
-LIBS += -lcurl
 SOURCES += main.cpp \
     dialog.cpp \
     mower.cpp \

@@ -4,11 +4,14 @@
 #include <QTextStream>
 #include <QMenu>
 #include <QApplication>
+#include <QNetworkReply>
 
 #include "lawnmower.h"
 
 LAWNMower::LAWNMower()
 {
+	_net = new QNetworkAccessManager(this);
+	connect(_net, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyReceived(QNetworkReply*)));
 	_dialog = new Dialog;
 	connect(_dialog, SIGNAL(accepted(std::string,std::string, bool)), this, SLOT(loadConfig(std::string,std::string, bool)));
 	_mower = 0;
@@ -35,7 +38,7 @@ void LAWNMower::loadConfig(std::string username, std::string password, bool reme
 	if (_mower) {
 		delete _mower;
 	}
-	_mower = new Mower(username, password);
+	_mower = new Mower(_net, username, password);
 	if (remember) {
 		writeConfig(username, password);
 	}
@@ -62,7 +65,7 @@ bool LAWNMower::readConfig()
 	std::string username = in.readLine().toStdString();
 	std::string password = in.readLine().toStdString();
 
-	_mower = new Mower(username, password);
+	_mower = new Mower(_net, username, password);
 
 	return true;
 }
@@ -72,7 +75,7 @@ void LAWNMower::toggleMower(bool enabled)
 	if (_mower) {
 		if (enabled) {
 			_isEnabled = true;
-			QTimer::singleShot(0, this, SLOT(mow()));
+			_mower->getStatus();
 		} else {
 			_isEnabled = false;
 			setTrayIcon(LAWNMower::Disabled);
@@ -81,13 +84,13 @@ void LAWNMower::toggleMower(bool enabled)
 	_aToggle->setChecked(_isEnabled);
 }
 
-void LAWNMower::mow()
+void LAWNMower::mow(Mower::Status status)
 {
 	if (!_isEnabled) {
 		return;
 	}
 	int ms = REFRESH;
-	switch (_mower->getStatus()) {
+	switch (status) {
 		case Mower::LoggedIn:
 			setTrayIcon(LAWNMower::LoggedIn);
 			break;
@@ -110,12 +113,12 @@ void LAWNMower::mow()
 			setTrayIcon(LAWNMower::Error);
 			break;
 	}
-	QTimer::singleShot(ms, this, SLOT(mow()));
+	QTimer::singleShot(ms, _mower, SLOT(getStatus()));
 }
 
 void LAWNMower::setTrayIcon(Icon icon)
 {
-	QIcon *q;
+	QIcon *q = 0;
 	switch (icon) {
 		case Disabled:
 			q = new QIcon(":/images/disabled.png");
@@ -167,8 +170,18 @@ void LAWNMower::showDialog()
 
 void LAWNMower::logout()
 {
-	if (!_mower->logout()) {
-		setTrayIcon(LAWNMower::Error);
-	}
+	// TODO Implement...
 	toggleMower(false);
+	_mower->logout();
+}
+
+void LAWNMower::replyReceived(QNetworkReply *reply)
+{
+	if (!_mower) {
+		return;
+	}
+	if (_mower->getState() == Mower::GettingStatus) {
+		std::string s(QString(reply->readAll()).toStdString());
+		mow(Mower::strToStatus(s));
+	}
 }
