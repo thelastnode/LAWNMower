@@ -2,7 +2,7 @@
 
 == Compiling
 
-To compile LAWNMower, install libcurl and the Qt4 development libraries and then run:
+To compile LAWNMower, install the Qt4 development libraries and then run:
 
 $ qmake
 $ make
