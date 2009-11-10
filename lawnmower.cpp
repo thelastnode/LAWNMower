@@ -184,4 +184,5 @@ void LAWNMower::replyReceived(QNetworkReply *reply)
 		std::string s(QString(reply->readAll()).toStdString());
 		mow(Mower::strToStatus(s));
 	}
+	delete reply;
 }

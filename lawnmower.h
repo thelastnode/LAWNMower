@@ -31,7 +31,7 @@ private slots:
 
 private:
 	static const int REFRESH = 3000;
-	static const int ERROR_REFRESH = 10000;
+	static const int ERROR_REFRESH = 5000;
 	bool _isEnabled;
 	QNetworkAccessManager *_net;
 	QSystemTrayIcon *_tray;
