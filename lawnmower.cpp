@@ -183,6 +183,6 @@ void LAWNMower::replyReceived(QNetworkReply *reply)
 	if (_mower->getState() == Mower::GettingStatus) {
 		std::string s(QString(reply->readAll()).toStdString());
 		mow(Mower::strToStatus(s));
-	}
-	delete reply;
+        }
+        reply->deleteLater();
 }
