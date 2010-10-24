@@ -29,6 +29,8 @@ private slots:
 	void mow(Mower::Status);
 	void replyReceived(QNetworkReply* reply);
 
+        void trayIconActivated(QSystemTrayIcon::ActivationReason);
+
 private:
 	static const int REFRESH = 3000;
 	static const int ERROR_REFRESH = 5000;

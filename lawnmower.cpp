@@ -161,6 +161,16 @@ void LAWNMower::enableSystemTray()
 	connect(aQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
 
 	_tray->setContextMenu(menu);
+
+        connect(_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
+}
+
+void LAWNMower::trayIconActivated(QSystemTrayIcon::ActivationReason activationReason)
+{
+    if (activationReason == QSystemTrayIcon::DoubleClick) {
+        toggleMower(false);
+        toggleMower(true);
+    }
 }
 
 void LAWNMower::showDialog()
