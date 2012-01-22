@@ -45,6 +45,7 @@ void Mower::login()
 {
 	_state = LoggingIn;
 	QNetworkRequest req(QUrl("https://auth.lawn.gatech.edu/index.php"));
+    req.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
 	QByteArray data("output=text&username=");
 	data += QUrl::toPercentEncoding(_username.c_str());
 	data += QString("&password=");
