@@ -1,0 +1,7 @@
+*.o
+*.user
+LAWNMower
+Makefile
+moc_*.cpp
+qrc_*
+ui_dialog.h
